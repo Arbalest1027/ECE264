@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "huffman.c"
+void destory_node(Node*);
+void print_node(Node*);
+
+int main(int argc, char* argv[]) {
+	int array[] = {543,45,53,354,-54,12};
+	Node* list = NULL;
+	for (int i = 0; i < 6;i++){
+
+	return EXIT_SUCCESS;
+}
+/* vim: set tabstop=4 shiftwidth=4 fileencoding=utf-8 noexpandtab: */
+void destory_fn(Node* header){
+	if (hearder == NULL){
+		return;
+	}
+	Node* curr = header;
+	while (curr != NULL){
+		Node* temp = curr->next;
+		free(curr);
+		curr = temp;
+	}
+}
+void print_node(Node* header){
+	Node* curr = header;
+	while (curr != NULL){
+		fprintf(stdout,"%d",curr->info);
+		curr = curr->next;
+	}
+	fputc('\n',stdout);
+}
+
+void cmp_fn(const void* p1, const void* p2){
+	return strcmp((const int*)p1,(const int*)p2);
+}
+

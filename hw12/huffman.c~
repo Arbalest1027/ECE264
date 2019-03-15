@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "huffman.h"
+
+Node* node_constr(void *ptr){
+  Node* node = malloc(sizeof(Node));
+  if (node == NULL){
+    return NULL;
+  }
+  node->ptr = (void*)ptr;
+  node->next = NULL;
+  return node;
+}
+
+Node *pq_enqueue(Node **pq, const void *new_object, 
+                  int (*cmp_fn)(const void *, const void *))
+{
+  	if (new_object == NULL){
+		return NULL;
+	}
+	if ((*pq) == NULL){
+	  return stack_push(pq,new_object);
+	}
+	if (cmp_fn(new_object,(*pq)->next) <= 0){
+	  return stack_push(pq,new_object);
+        }
+        return(pq_enqueue(&(*pq)->next,new_object,cmp_fn));
+  /* while (*pq != NULL){
+    if (cmp_fn((*pq)->ptr,new_object) <= 0){
+      break;
+    }
+    *pq = (*pq)->next;
+  }
+  return *pq; */
+}
+
+                       
+Node *pq_dequeue(Node **pq)
+{
+  Node* list = *pq;
+  Node* add = malloc(sizeof(Node));
+  list = list->next;
+  add = list; 
+  return add;
+}
+
+
+Node *stack_push(Node **stack, const void *new_object)
+{
+   	if (new_object == NULL){   
+  	 	return NULL;
+	}
+	Node* new_node = node_constr((void*)new_object);
+	new_node->next = *stack;
+	*stack = new_node;
+	return new_node;
+}
+
+Node *stack_pop(Node **stack){
+  Node* new_node = *stack;
+  Node* temp = malloc(sizeof(Node));
+  new_node = new_node->next;
+  temp = new_node;
+  return temp;
+}
+
+
+void destroy_node(Node *list, void (*destroy_fn)(void *))
+{
+  Node* curr = list;
+  Node* next;
+  while (curr != NULL){
+    next = curr->next;
+    destroy_fn(curr->next);
+    curr = next;
+  }
+  list = NULL;
+}
+
+Node *remove_last_node(Node **list){
+  Node* end = *list;
+  Node* next = NULL;
+  while (end->next != NULL){
+    next = end;
+    end = end->next;
+  }
+  next->next = NULL;
+  return next;
+}
+
+void destory_node(Node *list,void(*destory_fn)(void*)){
+  if (list == NULL){
+    return;
+  }
+  Node* curr;
+  while (list != NULL){
+    curr = list->next;
+    destory_fn(list->ptr);
+    free(list);
+    list = curr;
+  }
+}
+/* print an entire linked list                                           */
+/* pq is the address of the first Node in the linked list               */
+/* print_fn is the address of the function to print the generic object,  */
+/* of which the address is stored in the ptr field of an Node in the    */
+/* linked list                                                           */
+/*                                                                       */
+/* DO NOT CHANGE THIS FUNCTION, OTHERWISE YOUR OUTPUT WILL BE DIFFERENT  */
+/* AND YOU WILL NOT RECEIVE CREDIT                                       */
+ 
+void print_node(const Node *list, void (*print_fn)(const void *))
+{
+   while (list != NULL) {
+      // print the memory associated with list->ptr
+      print_fn(list->ptr);
+      // print an arrow
+      fprintf(stdout, "->");
+      list = list->next;
+   } 
+   // print NULL and a newline after that 
+   fprintf(stdout, "NULL\n");
+}
