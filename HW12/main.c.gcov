@@ -1,0 +1,35 @@
+        -:    0:Source:main.c
+        -:    0:Programs:2
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <string.h>
+        -:    4:#include "pa12.h"
+        -:    5:
+        -:    6:
+        -:    7:
+        -:    8:
+        3:    9:int main(int argc, char **argv)
+        -:   10:{
+        3:   11:  if (!strcmp(argv[1],"-J")){
+        -:   12:    struct node * head;
+        3:   13:    init(&head,atoi(argv[2]));
+        3:   14:    josp(&head,atoi(argv[3]),atoi(argv[4]),atoi(argv[2]));
+        -:   15:    struct node * temp;
+        9:   16:    while (head != NULL){
+        3:   17:      temp = head;
+        3:   18:      head = head -> next;
+        3:   19:      free(temp);
+        -:   20:    }
+        -:   21:  }
+        3:   22:  if (!strcmp(argv[1],"-J2")){
+        -:   23:    struct dnode * dhead;
+    #####:   24:    init2(&dhead,atoi(argv[2]));
+    #####:   25:    josp2(&dhead,atoi(argv[3]),atoi(argv[4]),atoi(argv[2]));
+        -:   26:    struct dnode * temp;
+    #####:   27:    while (dhead != NULL){
+    #####:   28:      temp = dhead;
+    #####:   29:      dhead = dhead -> next;
+    #####:   30:      free(temp);
+        -:   31:    }
+        -:   32:  }
+        -:   33:}

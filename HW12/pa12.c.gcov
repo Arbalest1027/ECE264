@@ -1,0 +1,300 @@
+        -:    0:Source:pa12.c
+        -:    0:Programs:2
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "pa12.h"
+        -:    4:
+        -:    5:#ifndef INIT
+        -:    6://head: the head of the singly linkedlist.
+        -:    7://length: the length of the singly linkedlist.
+        -:    8://This function will create and initialize the singly linkedlist with length=length, 
+        -:    9://The values of the nodes within the singly linkedlist will be the same as array indices.
+        -:   10://For example, if the singly linkedlist length is 4, the values of the nodes will be 0 1 2 3
+        3:   11:void init(struct node **head,int length)
+        -:   12:{
+        3:   13:    *head = malloc(sizeof(nodeType));
+        3:   14:    struct node* cur = *head;
+       31:   15:    for (int i = 0; i < length; i++) {
+       28:   16:        cur->value = i;
+       28:   17:        cur->next = (i < (length - 1)) ? malloc(sizeof(nodeType)) : NULL;
+       28:   18:        cur = cur->next;
+        -:   19:    }	
+        -:   20:
+        3:   21:}
+        -:   22:#endif
+        -:   23:
+        -:   24:#ifndef PRINT
+        -:   25://head: the head of the singly linkedlist.
+        -:   26://This function will print the values of the nodes within the singly linkedlist.
+        -:   27://For example, if the values of the nodes within the singly linkedlist are 1 5 6 8 9 10, this function will print 1,5,6,8,9,10
+        -:   28://Note: there is no extra comma nor at the beginning nor at the end.
+       15:   29:void print(struct node **head)
+        -:   30:{
+       15:   31:  struct node * temp = *head;
+       15:   32:  if (temp == NULL){
+    #####:   33:    printf("\n");
+    #####:   34:    return;
+        -:   35:  }
+       89:   36:  while(temp -> next != NULL){
+       59:   37:    printf("%d,",temp -> value);
+       59:   38:    temp = temp -> next;
+        -:   39:  }
+       15:   40:  printf("%d\n",temp -> value);
+        -:   41:
+        -:   42:}
+        -:   43:#endif
+        -:   44:
+        -:   45:#ifndef JOSPI
+        -:   46://head: the head of the singly linkedlist.
+        -:   47://k : this variable will be used for counting if count = k, the element will be out.
+        -:   48://p : this variable will be used for printing if the number of remaining elements/nodes is divisible by p (call the print function).
+        -:   49://length: the length of the singly linkedlist.
+        -:   50://This function will solve the josephus problem using the singly linkedlist.
+        3:   51:void josp(struct node ** head,int k,int p,int length)
+        -:   52:{
+        3:   53:    int remain = length;
+        3:   54:    int count = 0;
+        3:   55:    struct node * temp = *head;
+        3:   56:    struct node * prev = *head;
+       31:   57:    while (remain > 1){
+       25:   58:      count = 0;
+      148:   59:      while (count != k){
+       98:   60:	if (temp -> next == NULL){
+       16:   61:	  temp = *head;
+       16:   62:	  prev = *head;
+       16:   63:	  count++;
+        -:   64:	}
+        -:   65:	else {
+       82:   66:	  prev = temp;
+       82:   67:	  temp = temp -> next;
+       82:   68:	  count++;
+        -:   69:	}
+        -:   70:      }
+       25:   71:      if (temp -> next == NULL){
+       10:   72:	free(temp);
+       10:   73:	prev -> next = NULL;
+       10:   74:	temp = *head;
+       10:   75:	remain--;
+        -:   76:      }
+       15:   77:      else if (temp == (*head)){
+        2:   78:	*head = (*head) -> next;
+        2:   79:	free(temp);
+        2:   80:	temp = (*head);
+        2:   81:	remain--;
+        -:   82:      }
+        -:   83:      else {
+       13:   84:	prev -> next = temp -> next;
+       13:   85:	temp -> next = temp -> next -> next;
+       13:   86:	free(temp);
+       13:   87:	temp = prev -> next;
+       13:   88:	remain--;
+        -:   89:      }
+       25:   90:      if (remain % p == 0){
+       15:   91:	print(head);
+        -:   92:      }
+        -:   93:    }
+        3:   94:}
+        -:   95:#endif
+        -:   96:
+        -:   97:
+        -:   98:#ifndef INITII
+        -:   99://head: the head of the doubly linkedlist.
+        -:  100://length: the length of the doubly linkedlist.
+        -:  101://This function will create and initialize the doubly linkedlist with length=length, 
+        -:  102://The values of the nodes within the doubly linkedlist will be the same as array indices.
+        -:  103://For example, if the doubly linkedlist length is 4, the values of the nodes will be 0 1 2 3
+        -:  104://NOTE: this is a doubly linkedlist you should assign the prev pointer for each node probably.
+        -:  105://NOTE: head->prev is NULL as well as tail->next.
+        -:  106:
+    #####:  107:void init2(struct dnode ** head,int length)
+        -:  108:{
+    #####:  109:    *head = malloc(sizeof(dnodeType));
+    #####:  110:    (*head) -> prev = NULL;
+    #####:  111:    struct dnode* cur = *head;
+    #####:  112:    struct dnode* prev = *head;
+    #####:  113:    for (int i = 0; i < length; i++) {
+    #####:  114:        cur -> value = i;
+    #####:  115:	cur -> prev = (i == 0)? NULL : prev;
+    #####:  116:        cur -> next = (i < (length - 1)) ? malloc(sizeof(dnodeType)) : NULL;
+    #####:  117:        cur = cur -> next;
+    #####:  118:	if (i != 0){
+    #####:  119:	  prev = prev -> next;
+        -:  120:	}
+        -:  121:    }	  
+    #####:  122:}
+        -:  123:#endif
+        -:  124:
+        -:  125:
+        -:  126:#ifndef PRINTII
+        -:  127://head: the head of the doubly linkedlist.
+        -:  128://This function will print the values of the nodes within the doubly linkedlist.
+        -:  129://For example, if the values of the nodes within the doubly linkedlist are 1 5 6 8 9 10, this function will print 1,5,6,8,9,10
+        -:  130://Note: there is no extra comma nor at the beginning nor at the end.
+    #####:  131:void print2(struct dnode ** head)
+        -:  132:{
+    #####:  133:    struct dnode * temp = *head;
+    #####:  134:    if (temp == NULL){
+    #####:  135:      printf("\n");
+    #####:  136:      return;
+        -:  137:    }
+    #####:  138:    while(temp -> next != NULL){
+    #####:  139:      printf("%d,",temp -> value);
+    #####:  140:      temp = temp -> next;
+        -:  141:    }
+    #####:  142:    printf("%d\n",temp -> value);
+        -:  143:}
+        -:  144:
+        -:  145:#endif
+        -:  146:
+        -:  147:
+        -:  148:#ifndef JOSPII
+        -:  149://head: the head of the doubly linkedlist.
+        -:  150://k : this variable will be used for counting if count = k, the element will be out.
+        -:  151://q : this variable will be used for flipping the direction. If while counting, the value of the node is divisible by q,
+        -:  152://you will take the node out, flip the direction, and continue counting.
+        -:  153://length: the length of the doubly linkedlist.
+        -:  154://This function will solve the modified josephus problem using the doubly linkedlist.
+        -:  155://NOTE: you should call the print2() function after any delete operation.
+    #####:  156:void josp2(struct dnode **head, int k, int q,int length)
+        -:  157:{
+    #####:  158:    int remain = length;
+    #####:  159:    int count = 0;
+    #####:  160:    int direction = 1;
+    #####:  161:    struct dnode * temp = *head;
+        -:  162:    struct dnode * last;
+        -:  163:    struct dnode * temp2;
+    #####:  164:    while (temp -> next != NULL){
+    #####:  165:      temp = temp -> next;
+        -:  166:    }
+    #####:  167:    last = temp;
+    #####:  168:    temp = *head;
+    #####:  169:    while (remain > 1){
+    #####:  170:      count = 0;
+    #####:  171:      while (count < k){
+    #####:  172:	if (count != 0 && (temp -> value) % q == 0){
+    #####:  173:	  direction = 1 - direction;
+    #####:  174:	  if (temp -> next == NULL){
+    #####:  175:	    temp -> prev -> next = NULL;
+    #####:  176:	    last = temp -> prev;
+    #####:  177:	    temp2 = temp -> prev;
+    #####:  178:	    free(temp);
+    #####:  179:	    if (direction == 1){
+    #####:  180:	      temp = *head;
+        -:  181:	    }
+    #####:  182:	    else if(direction == 0){
+    #####:  183:	      temp = temp2;
+        -:  184:	    }
+        -:  185:	  }
+    #####:  186:	  else if (temp == (*head)){
+    #####:  187:	    *head = (*head) -> next;
+    #####:  188:	    (*head) -> prev = NULL;
+    #####:  189:	    free(temp);
+    #####:  190:	    if (direction == 1){
+    #####:  191:	      temp = (*head);
+        -:  192:	    }
+    #####:  193:	    else if (direction == 0){
+    #####:  194:	      temp = last;
+        -:  195:	    }
+        -:  196:	  }
+        -:  197:	  else {
+    #####:  198:	    if (direction == 1){
+    #####:  199:	      temp -> prev -> next = temp -> next;
+    #####:  200:	      temp -> next -> prev = temp -> prev;
+    #####:  201:	      temp2 = temp -> next;
+    #####:  202:	      free(temp);
+    #####:  203:	      temp = temp2;
+        -:  204:	    }
+    #####:  205:	    else if (direction == 0){
+    #####:  206:	      temp -> next -> prev = temp -> prev;
+    #####:  207:	      temp -> prev -> next = temp -> next;
+    #####:  208:	      temp2 = temp -> prev;
+    #####:  209:	      free(temp);
+    #####:  210:	      temp = temp2;
+        -:  211:	    }
+        -:  212:	    //count++;
+        -:  213:	  }
+    #####:  214:	  count++;
+    #####:  215:	  print2(head);
+    #####:  216:	  remain--;
+        -:  217:	}
+    #####:  218:	if(count < k){
+    #####:  219:	  if (direction == 1){
+    #####:  220:	    if (temp -> next == NULL){
+    #####:  221:	      temp = *head;
+    #####:  222:	      count++;
+        -:  223:	    }
+        -:  224:	    else {
+    #####:  225:	      temp = temp -> next;
+    #####:  226:	      count++;
+        -:  227:	    }
+        -:  228:	}
+    #####:  229:	  else if (direction == 0){
+    #####:  230:	    if (temp -> prev == NULL){
+    #####:  231:	      temp = last;
+    #####:  232:	      count++;
+        -:  233:	    }
+        -:  234:	    else {
+    #####:  235:	      temp = temp -> prev;
+    #####:  236:	      count++;
+        -:  237:	    }
+        -:  238:	  }
+        -:  239:	}
+        -:  240:      }
+        -:  241:      // deleting normally
+    #####:  242:      if (temp -> next == NULL){
+    #####:  243:	  temp -> prev -> next = NULL;
+    #####:  244:	  last = temp -> prev;
+    #####:  245:	  temp2 = temp -> prev;
+    #####:  246:	  if (temp -> value % q == 0){
+    #####:  247:	    direction = 1 - direction;
+        -:  248:	  }
+    #####:  249:	  free(temp);
+    #####:  250:	  if (direction == 1){
+    #####:  251:	    temp = *head;
+        -:  252:	  }
+    #####:  253:	  else if(direction == 0){
+    #####:  254:	    temp = temp2;
+        -:  255:	  }
+    #####:  256:	  remain--;
+        -:  257:      }
+    #####:  258:      else if (temp == (*head)){
+    #####:  259:	  *head = (*head) -> next;
+    #####:  260:	  (*head) -> prev = NULL;
+    #####:  261:	  if (temp -> value % q == 0){
+    #####:  262:	    direction = 1 - direction;
+        -:  263:	  }
+    #####:  264:	  free(temp);
+    #####:  265:	  if (direction == 1){
+    #####:  266:	    temp = (*head);
+        -:  267:	  }
+    #####:  268:	  else if (direction == 0){
+    #####:  269:	    temp = last;
+        -:  270:	  }
+    #####:  271:	  remain--;
+        -:  272:      }
+        -:  273:      else {
+    #####:  274:	  temp -> prev -> next = temp -> next;
+    #####:  275:	  temp -> next -> prev = temp -> prev;
+    #####:  276:	  temp2 = temp -> next;
+    #####:  277:	  if (temp -> value % q == 0){
+    #####:  278:	    direction = 1 - direction;
+        -:  279:	  }
+    #####:  280:	  free(temp);
+    #####:  281:	  if (direction == 1){
+    #####:  282:	    temp = temp2;
+        -:  283:	  }
+    #####:  284:	  else if (direction == 0){
+    #####:  285:	    temp = temp2 -> prev;
+        -:  286:	  }
+    #####:  287:	  remain--;
+        -:  288:      }
+    #####:  289:      print2(head);
+        -:  290:    }	
+        -:  291:    
+    #####:  292:}
+        -:  293:
+        -:  294:#endif
+        -:  295:
+        -:  296:
+        -:  297:
+        -:  298:
