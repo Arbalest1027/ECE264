@@ -1,0 +1,28 @@
+// do not change this part, if you do, your code may not compile
+//
+/* test for structure defined by student */
+#ifndef NTEST_STRUCT 
+#include "numint.h"
+#else 
+#include "numint_key.h"
+#endif /* NTEST_STRUCT */
+//
+// do not change above this line, if you do, your code may not compile
+// This is the only file you have to include 
+
+double simpson_numerical_integration(Integrand intg_arg)
+{
+   double integral = 0.0;
+   double l;//width of intervals
+   int i = 0;//loop control variable
+   double a = intg_arg.lower_limit;
+   l = (intg_arg.upper_limit - intg_arg.lower_limit) / intg_arg.n_intervals;//calculate width
+   //calculate the integral
+      while (i < intg_arg.n_intervals - 1) {
+	integral += (l / 6) * (intg_arg.function_to_be_integrated(a) + 4.0 * intg_arg.function_to_be_integrated(a + l / 2) + intg_arg.function_to_be_integrated(a + l));
+	a = intg_arg.lower_limit + (i + 1) * l;
+	i++;
+      }
+      integral += (l / 6) * (intg_arg.function_to_be_integrated(intg_arg.upper_limit - l) + 4.0 * intg_arg.function_to_be_integrated(intg_arg.upper_limit - l / 2) + intg_arg.function_to_be_integrated(intg_arg.upper_limit));//Last update using upper limit to achieve higher percision
+   return integral;
+}
