@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "huffman.h"
+
+int* print_asc(FILE* fx,char* filename2){
+  //	FILE* fp = fopen(filename,"r");
+	FILE* fp2 = fopen(filename2,"w");
+	int* count = malloc(sizeof(int)*256);
+	for(int i = 0;i < 256;i++){
+		count[i] = 0;
+	}	
+	while(!feof(fx)){
+	        unsigned char index = fgetc(fx);
+		count[(int) index]++;
+	}
+	for (int i = 0;i < 256;i++){
+	  fprintf(fp2,"%ld\n",(long)count[i]);
+	}
+	//	fclose(fx);
+	fclose(fp2);
+	return count;
+}			
+
+
+int int_cmp(const void* p1, const void* p2){
+	return *(const int*)p1 - *(const int*)p2;
+}
+
+Node* pq_enqueue(Node** pq, const void* ch,const void* count, int(*cmp_fn)(const void*,const void*)){
+	Node* new_node = malloc(sizeof(Node));
+	Node* temp = *pq;
+	new_node -> ch = (void*)ch;
+	new_node -> freq = (void*)count;
+	if (*pq == NULL){
+		new_node -> next = *pq;
+		*pq = new_node;
+		return *pq;
+	}
+	if (cmp_fn(count,temp -> freq) <= 0){
+		new_node -> next = *pq;
+		*pq = new_node;
+	}
+	else {
+		while (temp -> next != NULL && cmp_fn(count,temp -> next -> freq) > 0){
+			temp = temp -> next;
+		}
+		new_node -> next = temp -> next;
+		temp -> next = new_node;
+	}
+	return *pq;
+}	
+
+Node* stack_pop(Node** stack){
+	Node* list = NULL;
+	list = *stack;
+	list -> next = (*stack) -> next;
+	*stack = list -> next -> next;
+	list -> next -> next = NULL;
+	return list;
+}
+
+Node* enlist(int* count,Node* list){
+	int (*cmp_fn)(const void*, const void*) = int_cmp;
+	for (int i = 256;i > 0;i--){
+		if (count[i] != 0){
+			char* ch= malloc(sizeof(char));
+			*ch  = (char)i;
+			list = pq_enqueue(&list,ch,count + i,cmp_fn);
+			free(ch);
+		}
+	}
+	return list;
+}
+
+Node* enbranch(Node* left,Node* right){
+	Node* branch = malloc(sizeof(Node) + sizeof(*(int*)branch -> freq));
+	*(int*)branch -> freq  = *(int*)left->freq + *(int*)right->freq;
+	branch -> left = left;
+	branch -> right = right;
+	return branch;
+}
+
+Node* treequeue(Node** pq, Node* new_node, int(*cmp_fn)(const void*,const void*)){
+	Node* temp = *pq;
+	if (*pq == NULL){
+		new_node->next = *pq;
+		*pq = new_node;
+		return *pq;
+	}
+	if (cmp_fn(new_node -> freq,temp -> freq) <= 0){
+		new_node -> next = *pq;
+		*pq = new_node;
+	}
+	else {
+		while (temp -> next != NULL && cmp_fn(new_node -> freq,temp -> next -> freq) > 0){
+			temp = temp -> next;
+		}
+		new_node -> next = temp -> next;
+		temp -> next = new_node;
+	}
+	return *pq;
+}
+
+Node* entree(Node* list){
+	int (*cmp_fn)(const void*, const void*) = int_cmp;
+	while (list -> next != NULL){
+		Node* pop_list = stack_pop(&list);
+		Node* branch = enbranch(pop_list,pop_list -> next);
+		list = treequeue(&list,branch,cmp_fn);
+	}
+	return list;
+}
+
+void print_freq(Node* list,char* filename){
+	FILE* fp = fopen(filename,"w");
+	while(list != NULL){
+	        fprintf(fp,"%s",(char*)list->ch);
+		fputc(':',fp);
+		fprintf(fp,"%d",*(int*)list -> freq);
+		fprintf(fp,"->");
+		list = list -> next;
+	}
+	fprintf(fp,"NULL\n");
+	fclose(fp);
+}
+
+void print_bits(Node* list, FILE* fp,int* bits_a,int k){
+  if (list -> left == NULL && list -> right == NULL){
+    fprintf(fp,"%s:",(char*)list->ch);
+    int i = 0;
+    while(bits_a[i] != 2){
+      fputc(bits_a[i],fp);
+    }
+    fputc('\n',fp);
+    //   free(list);
+    return;
+  }
+  if (list -> left != NULL){
+    bits_a[k] = 0;
+    print_bits(list -> left,fp,bits_a,k + 1);
+    //   free(list -> left);
+  }
+  if (list -> right != NULL){
+    bits_a[k] = 1;
+    print_bits(list -> right,fp,bits_a,k + 1);
+    //  free(list -> right);
+  }  
+} 
