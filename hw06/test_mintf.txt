@@ -1,0 +1,10 @@
+haha
+a
+Check for the hex and binary of 123: 0x7b 0b1111011
+Print ascII code of 56: 8
+Decimal point!:$78.57
+%,%z,%w
+hi0,hello-$32.34,zup,abc
+
+123123,-2147483648,a,%0x2,%
+-0x7b,%
