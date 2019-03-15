@@ -1,0 +1,176 @@
+        -:    0:Source:pe11.c
+        -:    0:Programs:2
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "pe11.h"
+        -:    4:
+        -:    5:#ifndef PRINT
+      201:    6:void print(struct node** head)
+        -:    7:{
+      201:    8:  struct node * temp = *head;
+      201:    9:  if (temp == NULL){
+        4:   10:    printf("\n");
+        4:   11:    return;
+        -:   12:  }
+     2457:   13:  while(temp -> next != NULL){
+     2063:   14:    printf("%d,",temp -> value);
+     2063:   15:    temp = temp -> next;
+        -:   16:  }
+      197:   17:  printf("%d\n",temp -> value);
+        -:   18:}
+        -:   19:#endif
+        -:   20:
+        -:   21:#ifndef INSF
+       43:   22:void insertFirst(struct node** head,struct node * n)
+        -:   23:{
+       43:   24:  n -> next = *head;
+       43:   25:  *head = n;
+       43:   26:}
+        -:   27:#endif
+        -:   28:
+        -:   29:#ifndef INSA
+       30:   30:void insertAt(struct node** head,struct node * n,int index)
+        -:   31:{
+       30:   32:  struct node * temp = * head;
+       30:   33:  if (index == 0){
+       10:   34:    insertFirst(head, n);
+        -:   35:  }
+       20:   36:  else if (index == getLength(head)){
+        6:   37:    insertLast(&temp,n);
+        -:   38:  }
+       17:   39:  else if(index > getLength(head) || index < 0){
+        3:   40:    free(n);
+        -:   41:  }
+        -:   42:  else {
+       34:   43:    for (int i = 0; i < index - 1; i++){
+       23:   44:	temp = temp -> next;
+        -:   45:    }
+       11:   46:    n -> next = temp -> next;
+       11:   47:    temp -> next = n;
+        -:   48:  }
+        -:   49:  
+       30:   50:  return;
+        -:   51:}
+        -:   52:#endif
+        -:   53:
+        -:   54:#ifndef INSL
+       76:   55:void insertLast(struct node** head,struct node *n)
+        -:   56:{
+       76:   57:  struct node * last = *head;
+       76:   58:  n -> next = NULL;
+       76:   59:  if (*head == NULL){
+        2:   60:    *head = n;
+        2:   61:    return;
+        -:   62:  }
+      913:   63:  while (last -> next != NULL){
+      765:   64:    last = last -> next;
+        -:   65:  }
+       74:   66:  last -> next = n;
+        -:   67:}
+        -:   68:#endif
+        -:   69:
+        -:   70:#ifndef DELFM
+       23:   71:void deleteFirstMatch(struct node**head,int value)
+        -:   72:{
+       23:   73:  struct node * temp = *head;
+        -:   74:  struct node * prev;
+       23:   75:  if (temp == NULL){
+        1:   76:    return;
+        -:   77:  }
+       22:   78:  if (temp -> value == value){
+        7:   79:    *head = temp -> next;
+        7:   80:    free(temp);
+        7:   81:    return;
+        -:   82:  }
+      116:   83:  while (temp != NULL && temp -> value != value){
+       86:   84:    prev = temp;
+       86:   85:    temp = temp -> next;
+        -:   86:  }
+       15:   87:  if (temp == NULL){
+        2:   88:    return;
+        -:   89:  }
+       13:   90:  prev -> next = temp -> next;
+       13:   91:  free(temp);
+        -:   92:}
+        -:   93:#endif
+        -:   94:
+        -:   95:#ifndef DelA
+       30:   96:void deleteAt(struct node** head,int index)
+        -:   97:{
+       30:   98:  struct node * temp = *head;
+        -:   99:  struct node * last;
+       30:  100:  if (temp == NULL){
+    #####:  101:    return;
+        -:  102:  }
+       30:  103:  if (index == 0){
+       23:  104:    *head = temp -> next;
+       23:  105:    free(temp);
+       23:  106:    return;
+        -:  107:  }
+       79:  108:  for (int i = 0; i < index - 1; i++){
+       72:  109:    last = temp;
+       72:  110:    temp = temp -> next;
+        -:  111:  }
+        7:  112:  if (temp == NULL){
+    #####:  113:    return;
+        -:  114:  }
+        7:  115:  else if (temp -> next == NULL){
+    #####:  116:    free(last -> next);
+    #####:  117:    last -> next = NULL;
+        -:  118:  }
+        7:  119:  struct node * next = temp -> next -> next;
+        7:  120:  free(temp -> next);
+        7:  121:  temp -> next = next;
+        -:  122:}
+        -:  123:#endif
+        -:  124:
+        -:  125:#ifndef DELAM
+       15:  126:void deleteAllMatches(struct node** head,int value)
+        -:  127:{
+       15:  128:  struct node * temp = *head;
+        -:  129:  struct node * prev;
+        -:  130:  //delete if it is the first node
+       50:  131:  while (temp != NULL && temp -> value == value){
+       20:  132:    *head = temp -> next;
+       20:  133:    free(temp);
+       20:  134:    temp = *head;
+        -:  135:  }  
+       66:  136:  while (temp != NULL){
+      255:  137:    while(temp != NULL && temp -> value != value){
+      163:  138:      prev = temp;
+      163:  139:      temp = temp -> next;
+        -:  140:    }
+       46:  141:    if (temp == NULL){
+       10:  142:      return;
+        -:  143:    }
+       36:  144:    prev -> next = temp -> next;
+       36:  145:    free(temp);
+       36:  146:    temp = prev -> next;
+        -:  147:  }
+        -:  148:}
+        -:  149:#endif
+        -:  150:
+        -:  151:#ifndef L
+       41:  152:int getLength(struct node** head)
+        -:  153:{
+       41:  154:  int  count = 0;
+       41:  155:  struct node * curr = *head;
+      489:  156:  while (curr != NULL){
+      407:  157:    count++;
+      407:  158:    curr = curr -> next;
+        -:  159:  }
+       41:  160:  return count;
+        -:  161:}
+        -:  162:#endif
+        -:  163:
+        -:  164:#ifndef FREEMEM
+        3:  165:void freeMemory(struct node** head)
+        -:  166:{
+        -:  167:  struct node * temp;
+       30:  168:  while (*head != NULL){
+       24:  169:    temp = *head;
+       24:  170:    *head = (*head) -> next;
+       24:  171:    free(temp);
+        -:  172:  }
+        3:  173:}
+        -:  174:#endif

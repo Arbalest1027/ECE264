@@ -1,0 +1,98 @@
+        -:    0:Source:main.c
+        -:    0:Programs:2
+        -:    1:#define _GNU_SOURCE
+        -:    2:#include <stdio.h>
+        -:    3:#include <stdlib.h>
+        -:    4:#include <string.h>
+        -:    5:#include "pe11.h"
+        -:    6:#define MAX_LENGTH 100
+        -:    7:
+        3:    8:int main(int argc, char **argv) {
+        3:    9:  FILE * fp = fopen(argv[1],"r");
+        -:   10:  char * token;
+        -:   11:  char command[MAX_LENGTH];
+        -:   12:  int value;
+        3:   13:  struct node * head = NULL;
+        3:   14:  int count = 0;
+      224:   15:  while (fgets(command, MAX_LENGTH,fp) != NULL){
+      218:   16:    token = strtok(command," ");
+      218:   17:    count = 0;
+      218:   18:    if (!strcmp(token,"L")){
+        7:   19:      printf("%d\n",getLength(&head));
+        -:   20:    }
+      211:   21:    else if (!strcmp(token,"insF")){
+       33:   22:      struct node * n = malloc(sizeof(nodeType));
+      132:   23:      while (token != NULL){
+       66:   24:	token = strtok(NULL," ");
+       66:   25:	count++;
+       66:   26:	if (count == 1){
+       33:   27:	  value = atoi(token);
+       33:   28:	  n -> value = value;
+        -:   29:	}
+        -:   30:      }
+       33:   31:      insertFirst(&head,n);
+       33:   32:      print(&head);
+        -:   33:    }
+      178:   34:    else if(!strcmp(token,"insL")){
+       70:   35:      struct node * n = malloc(sizeof(nodeType));
+      280:   36:      while (token != NULL){
+      140:   37:	token = strtok(NULL," ");
+      140:   38:	count++;
+      140:   39:	if (count == 1){
+       70:   40:	  value = atoi(token);
+       70:   41:	  n -> value = value;
+        -:   42:	}
+        -:   43:      }
+       70:   44:      insertLast(&head,n);
+       70:   45:      print(&head);
+        -:   46:    }
+      108:   47:    else if (!strcmp(token,"insA")){
+       30:   48:      struct node * n = malloc(sizeof(nodeType));
+      151:   49:      while (token != NULL){
+       91:   50:	token = strtok(NULL," ");
+       91:   51:	count++;
+       91:   52:	if (count == 1){
+       30:   53:	  value = atoi(token);
+       30:   54:	  n -> value = value;
+        -:   55:	}
+       61:   56:	else if (count == 2){
+       30:   57:	  insertAt(&head,n,atoi(token));
+       30:   58:	  print(&head);
+        -:   59:	}
+        -:   60:      }
+        -:   61:    }
+       78:   62:    else if (!strcmp(token,"delFM")){
+       92:   63:      while (token != NULL){
+       46:   64:	token = strtok(NULL," ");
+       46:   65:	count++;
+       46:   66:	if (count == 1){
+       23:   67:	  deleteFirstMatch(&head,atoi(token));
+       23:   68:	  print(&head);
+        -:   69:	}
+        -:   70:      }
+        -:   71:    }
+       55:   72:    else if (!strcmp(token,"delAM")){
+       60:   73:      while (token != NULL){
+       30:   74:	token = strtok(NULL," ");
+       30:   75:	count++;
+       30:   76:	if (count == 1){
+       15:   77:	  deleteAllMatches(&head,atoi(token));
+       15:   78:	  print(&head);
+        -:   79:	}
+        -:   80:      }
+        -:   81:    }
+       40:   82:    else if (!strcmp(token,"delA")){
+      120:   83:      while (token != NULL){
+       60:   84:	token = strtok(NULL," ");
+       60:   85:	count++;
+       60:   86:	if (count == 1){
+       30:   87:	  deleteAt(&head,atoi(token));
+       30:   88:	  print(&head);
+        -:   89:	}
+        -:   90:      }
+        -:   91:    }
+        -:   92:  }
+        3:   93:  fclose(fp);
+        3:   94:  freeMemory(&head);
+        3:   95:  return EXIT_SUCCESS;
+        -:   96:}
