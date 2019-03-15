@@ -1,0 +1,91 @@
+        -:    0:Source:pe10.c
+        -:    0:Programs:2
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <stdbool.h>
+        -:    4:#include "pe10.h"
+        -:    5:
+        -:    6:
+        -:    7:
+        -:    8:
+        -:    9:#ifndef PRINT
+        -:   10:// This function will print the boolean array with length=len in the following format.
+        -:   11:// It will print out the index if its corresponding value in the array is true, Otherwise it will print X instead.
+        -:   12:// If the array is of length 4, and it has values of true(index=0),false(index=1),true(index=2),false(index=3)
+        -:   13:// the output looks like this: 0,X,2,X
+        -:   14:// ::::::::IMPORTANT NOTES:::::::
+        -:   15:// 1- There should be no extra comma at the end nor at the beginning, "Violating this format will get you zero".
+        -:   16:// 2- Make sure that there is a new line at the end of the output (i.e printf("\n")). 
+       22:   17:void print(bool * arr,int len)
+        -:   18:{
+      224:   19:  for (int i = 0; i < len;i++){
+      202:   20:    if (i == len - 1){
+       22:   21:      if (arr[i] == false){
+       13:   22:	printf("X");
+        -:   23:      }
+        9:   24:      else if (arr[i] == true){
+        9:   25:	printf("%d",i);
+        -:   26:      }
+        -:   27:    }else {
+      180:   28:      if (arr[i] == false){
+       87:   29:	printf("X,");
+        -:   30:      }
+       93:   31:      else if (arr[i] == true){
+       93:   32:	printf("%d,",i);
+        -:   33:      }
+        -:   34:    }
+        -:   35:  }
+       22:   36:  printf("\n");
+       22:   37:}
+        -:   38:#endif
+        -:   39:
+        -:   40:
+        -:   41:#ifndef JOSEPHUS
+        -:   42:// arr: a boolean array which you should initialized to 1's in the main.c.
+        -:   43:// len: the length of the array
+        -:   44:// k:   the numbers of elements you should skip
+        -:   45:// p:   if the number of remaining elements in the array after each step is divisible by p, then you need to print the array.
+        -:   46:// Your function should stop when it has only one element left.
+        4:   47:void josephus(bool * arr, int len, int k,int p)
+        -:   48:{
+        4:   49:  int remain = len;
+        4:   50:  int i = 0;
+        4:   51:  int count = 0;
+        4:   52:  int alive = 0;
+       40:   53:  while (remain > 1){
+       32:   54:    alive = 0;
+       32:   55:    count = 0;
+      111:   56:    while (arr[i] == false){
+       47:   57:      i++;
+       47:   58:      if (i == len){
+        8:   59:	i = 0;
+        -:   60:      }
+        -:   61:    }
+      346:   62:    while (count != k){
+      282:   63:      if (arr[i] == true){
+      161:   64:	count++;
+        -:   65:      }
+      282:   66:      i++;
+      282:   67:      if (i == len){
+       28:   68:	i = 0;
+        -:   69:      }
+        -:   70:    }
+       89:   71:    while (arr[i] == false){
+       25:   72:      i++;
+       25:   73:      if (i == len){
+        3:   74:	i = 0;
+        -:   75:      }
+        -:   76:    }
+       32:   77:    arr[i] = false;
+       32:   78:    remain--;
+      324:   79:    for (int ct = 0;ct < len;ct++){
+      292:   80:      if (arr[ct] == true){
+      146:   81:	alive++;
+        -:   82:      }
+        -:   83:    }
+       32:   84:    if (alive % p == 0){
+       22:   85:      print(arr,len);
+        -:   86:    }
+        -:   87:  }
+        4:   88:}
+        -:   89:#endif
